@@ -4,4 +4,6 @@
     <string name="two_player">Two Player</string>
     <string name="choose_mode">Choose Mode</string>
     <string name="circulartictactoc">CircularTicTacToc</string>
+    <string name="play_as_o">Play as O</string>
+    <string name="plays_as_x">Plays As X</string>
 </resources>

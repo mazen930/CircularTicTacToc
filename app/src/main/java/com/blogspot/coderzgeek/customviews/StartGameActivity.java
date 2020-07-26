@@ -8,6 +8,7 @@ import android.widget.Button;
 
 public class StartGameActivity extends AppCompatActivity {
     Button onePlayerButton, twoPlayerButton;
+    public static int gameMode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,16 +19,16 @@ public class StartGameActivity extends AppCompatActivity {
         onePlayerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), MainActivity.class);
-                i.putExtra("gameMode", 1);
+                Intent i = new Intent(getApplicationContext(), ChooseWhoIsStarting.class);
+                gameMode = 1;
                 startActivity(i);
             }
         });
         twoPlayerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), MainActivity.class);
-                i.putExtra("gameMode", 0);
+                Intent i = new Intent(getApplicationContext(), ChooseWhoIsStarting.class);
+                gameMode = 0;
                 startActivity(i);
             }
         });

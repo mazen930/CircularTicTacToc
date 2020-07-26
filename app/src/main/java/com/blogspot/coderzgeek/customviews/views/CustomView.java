@@ -20,10 +20,12 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
+import com.blogspot.coderzgeek.customviews.ChooseWhoIsStarting;
 import com.blogspot.coderzgeek.customviews.CustomDialogClass;
 import com.blogspot.coderzgeek.customviews.GameLogic;
 import com.blogspot.coderzgeek.customviews.MainActivity;
 import com.blogspot.coderzgeek.customviews.R;
+import com.blogspot.coderzgeek.customviews.StartGameActivity;
 
 import java.util.ArrayList;
 
@@ -39,6 +41,8 @@ public class CustomView extends View {
     boolean taken[][], visited[][];
     int turns;
     GameLogic gameLogic;
+    int gameMode;
+    int firstToPlay;
 
     public enum GameMode {
         onePlayer,
@@ -78,6 +82,8 @@ public class CustomView extends View {
     }
 
     private void init(@Nullable AttributeSet set, Context context) {
+        gameMode = StartGameActivity.gameMode;
+        firstToPlay = ChooseWhoIsStarting.firstToPlay;
         turns = 0;
         mPaintCircle = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaintCircle.setStyle(Paint.Style.STROKE);
@@ -113,7 +119,10 @@ public class CustomView extends View {
         gameLogic = new GameLogic();//initialize
         this.mode = GameMode.twoPlayer;
         //this.level
-        currentMove = GameLogic.moveType.X;
+        if (firstToPlay == 0)
+            currentMove = GameLogic.moveType.X;
+        else
+            currentMove = GameLogic.moveType.O;
 
 
         if (set == null)
@@ -213,14 +222,7 @@ public class CustomView extends View {
             if (insideCircle(x, y, r1)) {
                 //Inside Circle with r1
                 if (!taken[cellNumber(x, y) - 1][0]) {
-                    taken[cellNumber(x, y) - 1][0] = true;
-                    visited[cellNumber(x, y) - 1][0] = turns != 0;
-                    gameLogic.humanMove(currentMove, mapping(cellNumber(x, y)));
-                    if (gameLogic.checkWinning().size() != 0) {
-                        Toast.makeText(getContext(), "You won", Toast.LENGTH_SHORT).show();
-                    }
-                    currentMove = currentMove == GameLogic.moveType.X ? GameLogic.moveType.O : GameLogic.moveType.X;
-                    turns = turns == 1 ? 0 : 1;
+                    handlingTouchEvent(x, y, 0, 0);
                     postInvalidate();//update UI
                     //Toast.makeText(getContext(), "This point is inside circle 1 and cell # " + cellNumber(x, y), Toast.LENGTH_SHORT).show();
                     return true;
@@ -228,14 +230,7 @@ public class CustomView extends View {
             } else if (insideCircle(x, y, r2)) {
                 //inside Circle with r2
                 if (!taken[cellNumber(x, y) - 1][1]) {
-                    taken[cellNumber(x, y) - 1][1] = true;
-                    visited[cellNumber(x, y) - 1][1] = turns != 0;
-                    gameLogic.humanMove(currentMove, mapping(cellNumber(x, y)) + 8);
-                    if (gameLogic.checkWinning().size() != 0) {
-                        Toast.makeText(getContext(), "You won", Toast.LENGTH_SHORT).show();
-                    }
-                    currentMove = currentMove == GameLogic.moveType.X ? GameLogic.moveType.O : GameLogic.moveType.X;
-                    turns = turns == 1 ? 0 : 1;
+                    handlingTouchEvent(x, y, 1, 8);
                     postInvalidate();//update UI
                     //Toast.makeText(getContext(), "This point is inside circle 2 and cell # " + cellNumber(x, y), Toast.LENGTH_SHORT).show();
                     return true;
@@ -243,14 +238,7 @@ public class CustomView extends View {
             } else if (insideCircle(x, y, r3)) {
                 //inside circle with r3
                 if (!taken[cellNumber(x, y) - 1][2]) {
-                    taken[cellNumber(x, y) - 1][2] = true;
-                    visited[cellNumber(x, y) - 1][2] = turns != 0;
-                    gameLogic.humanMove(currentMove, mapping(cellNumber(x, y)) + 16);
-                    if (gameLogic.checkWinning().size() != 0) {
-                        Toast.makeText(getContext(), "You won", Toast.LENGTH_SHORT).show();
-                    }
-                    currentMove = currentMove == GameLogic.moveType.X ? GameLogic.moveType.O : GameLogic.moveType.X;
-                    turns = turns == 1 ? 0 : 1;
+                    handlingTouchEvent(x, y, 2, 16);
                     postInvalidate();//update UI
                     //Toast.makeText(getContext(), "This point is inside circle 3 and cell # " + cellNumber(x, y), Toast.LENGTH_SHORT).show();
                     return true;
@@ -258,21 +246,12 @@ public class CustomView extends View {
             } else if (insideCircle(x, y, r4)) {
                 //inside circle with r4
                 if (!taken[cellNumber(x, y) - 1][3]) {
-                    taken[cellNumber(x, y) - 1][3] = true;
-                    visited[cellNumber(x, y) - 1][3] = turns != 0;
-                    gameLogic.humanMove(currentMove, mapping(cellNumber(x, y)) + 24);
-                    if (gameLogic.checkWinning().size() != 0) {
-                        Toast.makeText(getContext(), "You won", Toast.LENGTH_SHORT).show();
-                    }
-                    currentMove = currentMove == GameLogic.moveType.X ? GameLogic.moveType.O : GameLogic.moveType.X;
-                    turns = turns == 1 ? 0 : 1;
+                    handlingTouchEvent(x, y, 3, 24);
                     postInvalidate();//update UI
                     //Toast.makeText(getContext(), "This point is inside circle 4 and cell # " + cellNumber(x, y), Toast.LENGTH_SHORT).show();
                     return true;
                 }
             } else {
-                CustomDialogClass cdd = new CustomDialogClass((Activity) getContext());
-                cdd.show();
                 Toast.makeText(getContext(), "This point is outside all circles", Toast.LENGTH_SHORT).show();
                 return true;
             }
@@ -353,12 +332,21 @@ public class CustomView extends View {
 
     }
 
-    void handlingTouchEvent(int x, int y, int circleNumber, int levelFactor) {
+    void handlingTouchEvent(float x, float y, int circleNumber, int levelFactor) {
         taken[cellNumber(x, y) - 1][circleNumber] = true;
         visited[cellNumber(x, y) - 1][circleNumber] = turns != 0;
-        gameLogic.humanMove(currentMove, mapping(cellNumber(x, y)) + levelFactor);
+        if (gameMode == 1)// 2 player Mode
+            gameLogic.humanMove(currentMove, mapping(cellNumber(x, y)) + levelFactor);
+        else if (gameMode == 0) {// 1 Player Mode
+            if ((firstToPlay == 0 && currentMove == GameLogic.moveType.O) || (firstToPlay == 1 && currentMove == GameLogic.moveType.X))
+                gameLogic.computerMove(currentMove, GameLogic.levelType.HARD);
+            else
+                gameLogic.humanMove(currentMove, mapping(cellNumber(x, y)) + levelFactor);
+        }
         if (gameLogic.checkWinning().size() != 0) {
-            Toast.makeText(getContext(), "You won", Toast.LENGTH_SHORT).show();
+            CustomDialogClass cdd = new CustomDialogClass((Activity) getContext());
+            cdd.show();
+            //Toast.makeText(getContext(), "You won", Toast.LENGTH_SHORT).show();
         }
         currentMove = currentMove == GameLogic.moveType.X ? GameLogic.moveType.O : GameLogic.moveType.X;
         turns = turns == 1 ? 0 : 1;
