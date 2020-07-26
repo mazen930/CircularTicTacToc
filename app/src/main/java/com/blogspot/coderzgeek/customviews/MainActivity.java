@@ -17,7 +17,6 @@ public class MainActivity extends AppCompatActivity {
 
         mCustomView = (CustomView) findViewById(R.id.customView);
 
-        int playerOne=0,playerTwo=1;
 
 
     }

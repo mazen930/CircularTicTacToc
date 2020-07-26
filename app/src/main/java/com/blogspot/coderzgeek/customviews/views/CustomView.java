@@ -19,6 +19,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
+import com.blogspot.coderzgeek.customviews.GameLogic;
 import com.blogspot.coderzgeek.customviews.R;
 
 import java.util.ArrayList;
@@ -34,6 +35,16 @@ public class CustomView extends View {
     private Bitmap bitmapRight, bitmapFalse, temp;
     boolean taken[][], visited[][];
     int turns;
+    GameLogic gameLogic;
+
+    public enum GameMode {
+        onePlayer,
+        twoPlayer
+    }
+
+    private GameLogic.moveType currentMove;
+    private GameLogic.levelType level;
+    private GameMode mode;
 
     ArrayList<ArrayList<Pair<Float, Float>>> cells;
 
@@ -96,6 +107,12 @@ public class CustomView extends View {
         getCellsLocation();
         initializeTakenArray();
 
+        gameLogic = new GameLogic();//initialize
+        this.mode = GameMode.twoPlayer;
+        //this.level
+        currentMove = GameLogic.moveType.X;
+
+
         if (set == null)
             return;
         TypedArray ta = getContext().obtainStyledAttributes(set, R.styleable.CustomView);
@@ -125,11 +142,10 @@ public class CustomView extends View {
                 if (taken[i][j]) {
                     float x = cells.get(i).get(j).first;
                     float y = cells.get(i).get(j).second;
-                    if (turns == 0)
+                    if (!visited[i][j])
                         canvas.drawCircle(x, y, (float) (0.1 * r1), filledCircleRed);
                     else
                         canvas.drawCircle(x, y, (float) (0.1 * r1), filledCircleGreen);
-                    turns = turns == 1 ? 0 : 1;
                 }
             }
         }
@@ -193,28 +209,64 @@ public class CustomView extends View {
             float y = event.getY();
             if (insideCircle(x, y, r1)) {
                 //Inside Circle with r1
-                taken[cellNumber(x, y) - 1][0] = true;
-                postInvalidate();//update UI
-                Toast.makeText(getContext(), "This point is inside circle 1 and cell # " + cellNumber(x, y), Toast.LENGTH_SHORT).show();
-                return true;
+                if (!taken[cellNumber(x, y) - 1][0]) {
+                    taken[cellNumber(x, y) - 1][0] = true;
+                    visited[cellNumber(x, y) - 1][0] = turns != 0;
+                    gameLogic.humanMove(currentMove, mapping(cellNumber(x, y)));
+                    if (gameLogic.checkWinning().size() != 0) {
+                        Toast.makeText(getContext(), "You won", Toast.LENGTH_SHORT).show();
+                    }
+                    currentMove = currentMove == GameLogic.moveType.X ? GameLogic.moveType.O : GameLogic.moveType.X;
+                    turns = turns == 1 ? 0 : 1;
+                    postInvalidate();//update UI
+                    //Toast.makeText(getContext(), "This point is inside circle 1 and cell # " + cellNumber(x, y), Toast.LENGTH_SHORT).show();
+                    return true;
+                }
             } else if (insideCircle(x, y, r2)) {
                 //inside Circle with r2
-                taken[cellNumber(x, y) - 1][1] = true;
-                postInvalidate();//update UI
-                Toast.makeText(getContext(), "This point is inside circle 2 and cell # " + cellNumber(x, y), Toast.LENGTH_SHORT).show();
-                return true;
+                if (!taken[cellNumber(x, y) - 1][1]) {
+                    taken[cellNumber(x, y) - 1][1] = true;
+                    visited[cellNumber(x, y) - 1][1] = turns != 0;
+                    gameLogic.humanMove(currentMove, mapping(cellNumber(x, y)) + 8);
+                    if (gameLogic.checkWinning().size() != 0) {
+                        Toast.makeText(getContext(), "You won", Toast.LENGTH_SHORT).show();
+                    }
+                    currentMove = currentMove == GameLogic.moveType.X ? GameLogic.moveType.O : GameLogic.moveType.X;
+                    turns = turns == 1 ? 0 : 1;
+                    postInvalidate();//update UI
+                    //Toast.makeText(getContext(), "This point is inside circle 2 and cell # " + cellNumber(x, y), Toast.LENGTH_SHORT).show();
+                    return true;
+                }
             } else if (insideCircle(x, y, r3)) {
                 //inside circle with r3
-                taken[cellNumber(x, y) - 1][2] = true;
-                postInvalidate();//update UI
-                Toast.makeText(getContext(), "This point is inside circle 3 and cell # " + cellNumber(x, y), Toast.LENGTH_SHORT).show();
-                return true;
+                if (!taken[cellNumber(x, y) - 1][2]) {
+                    taken[cellNumber(x, y) - 1][2] = true;
+                    visited[cellNumber(x, y) - 1][2] = turns != 0;
+                    gameLogic.humanMove(currentMove, mapping(cellNumber(x, y)) + 16);
+                    if (gameLogic.checkWinning().size() != 0) {
+                        Toast.makeText(getContext(), "You won", Toast.LENGTH_SHORT).show();
+                    }
+                    currentMove = currentMove == GameLogic.moveType.X ? GameLogic.moveType.O : GameLogic.moveType.X;
+                    turns = turns == 1 ? 0 : 1;
+                    postInvalidate();//update UI
+                    //Toast.makeText(getContext(), "This point is inside circle 3 and cell # " + cellNumber(x, y), Toast.LENGTH_SHORT).show();
+                    return true;
+                }
             } else if (insideCircle(x, y, r4)) {
                 //inside circle with r4
-                taken[cellNumber(x, y) - 1][3] = true;
-                postInvalidate();//update UI
-                Toast.makeText(getContext(), "This point is inside circle 4 and cell # " + cellNumber(x, y), Toast.LENGTH_SHORT).show();
-                return true;
+                if (!taken[cellNumber(x, y) - 1][3]) {
+                    taken[cellNumber(x, y) - 1][3] = true;
+                    visited[cellNumber(x, y) - 1][3] = turns != 0;
+                    gameLogic.humanMove(currentMove, mapping(cellNumber(x, y)) + 24);
+                    if (gameLogic.checkWinning().size() != 0) {
+                        Toast.makeText(getContext(), "You won", Toast.LENGTH_SHORT).show();
+                    }
+                    currentMove = currentMove == GameLogic.moveType.X ? GameLogic.moveType.O : GameLogic.moveType.X;
+                    turns = turns == 1 ? 0 : 1;
+                    postInvalidate();//update UI
+                    //Toast.makeText(getContext(), "This point is inside circle 4 and cell # " + cellNumber(x, y), Toast.LENGTH_SHORT).show();
+                    return true;
+                }
             } else {
                 Toast.makeText(getContext(), "This point is outside all circles", Toast.LENGTH_SHORT).show();
                 return false;
@@ -267,4 +319,33 @@ public class CustomView extends View {
                 visited[i][j] = false;
             }
     }
+
+    int mapping(int cellNumber) {
+        if (cellNumber == 1)
+            return 1;
+        else if (cellNumber == 2) {
+            return 0;
+
+        } else if (cellNumber == 3) {
+            return 7;
+
+        } else if (cellNumber == 4) {
+            return 6;
+
+        } else if (cellNumber == 5) {
+            return 5;
+
+        } else if (cellNumber == 6) {
+            return 4;
+
+        } else if (cellNumber == 7) {
+            return 3;
+
+        } else if (cellNumber == 8) {
+            return 2;
+        } else
+            return -1;
+
+    }
+
 }

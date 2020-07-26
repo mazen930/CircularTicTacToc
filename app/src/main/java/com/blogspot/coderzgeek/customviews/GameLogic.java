@@ -33,16 +33,15 @@ public class GameLogic {
 
     ;
 
-    private int[][] a = new int[32][];        //winning cases of each cell
-    private int[] gameMatrix = new int[56]; //initally zeros
+    private int[][] a = new int[32][];        // winning cases of each cell
+    private int[] gameMatrix = new int[56];   // initially zeros
     private int[] nextState = new int[56];
-    private moveType[] visited = new moveType[32];
+    public moveType[] visited = new moveType[32];
     private ArrayList<ArrayList<Integer>> spirals = new ArrayList<>(32);
     private ArrayList<ArrayList<Integer>> rings = new ArrayList<>(32);
     private ArrayList<ArrayList<Integer>> lines = new ArrayList<>(32);
-    ;
 
-    public GameLogic() {
+    public GameLogic() {//constructor
         initialize();
     }
 
@@ -52,19 +51,28 @@ public class GameLogic {
 
     private void initialize() {
         for (int i = 0; i < 32; ++i) {
+            visited[i] = moveType.EMPTY;
             a[i] = new int[56];
+            ArrayList<Integer> ring = new ArrayList<>();
+            ArrayList<Integer> line = new ArrayList<>();
+            ArrayList<Integer> spiral = new ArrayList<>();
             for (int j = 0; j < 4; ++j) {
                 int v = i % 8;
                 v = (v - j + 8) % 8;
                 a[i][i / 8 * 8 + v] = 1;
-                rings.get(i).add(i / 8 * 8 + v);
+                ring.add(i / 8 * 8 + v);
             }
             a[i][32 + i % 8] = 1;
-            lines.get(i).add(32 + i % 8);
+            line.add(32 + i % 8);
             a[i][40 + (i + i / 8) % 8] = 1;
-            spirals.get(i).add(40 + (i + i / 8) % 8);
-            a[i][48 + (i - i / 8 + 8) % 8] = 1;
-            spirals.get(i).add(48 + (i - i / 8 + 8) % 8);
+            spiral.add(40 + (i + i / 8) % 8);
+            final int i1 = 48 + (i - i / 8 + 8) % 8;
+            a[i][i1] = 1;
+
+            spiral.add(i1);
+            rings.add(ring);
+            lines.add(line);
+            spirals.add(spiral);
         }
     }
 
@@ -162,9 +170,7 @@ public class GameLogic {
                 int moveVal = minimax(visited, nextState, player, 0, false, (int) -1e9, (int) 1e9);
                 //undo the move
                 visited[cell] = moveType.EMPTY;
-                for (int i = 0; i < 56; i++) {
-                    nextState[i] = gameMatrix[i];
-                }
+                System.arraycopy(gameMatrix, 0, nextState, 0, 56);
                 if (moveVal > bestVal) {
                     bestVal = moveVal;
                     bestCell = cell;
@@ -216,12 +222,12 @@ public class GameLogic {
             } else if (sScore == mx)
                 optimalPlays.add(move);
         }
-        int randIdx = randomInRange(1, optimalPlays.size());
+        int randIdx = randomInRange(optimalPlays.size());
         return optimalPlays.get(randIdx);
     }
 
-    int randomInRange(int min, int max) {
-        return new Random().nextInt((max - min) + 1) + min;
+    int randomInRange(int max) {
+        return new Random().nextInt((max - 1) + 1) + 1;
     }
 
     private int randomMove() {
@@ -230,7 +236,7 @@ public class GameLogic {
             if (visited[cell] == moveType.EMPTY)
                 moves.add(cell);
         }
-        int randIdx = randomInRange(1, moves.size());
+        int randIdx = randomInRange(moves.size());
         return moves.get(randIdx);
     }
 
@@ -240,7 +246,7 @@ public class GameLogic {
             if (visited[i] != moveType.EMPTY)
                 cnt++;
         }
-        int move = -1;
+        int move;
         if (level == levelType.EASY)
             move = randomMove();
         else if (level == levelType.HARD && cnt >= 20)
@@ -284,7 +290,7 @@ public class GameLogic {
             if (Math.abs(lSpiral.get(left)) == 2) {
                 int right = left;
                 for (int i = 0; i < 4; i++) {
-                    if (rSpiral.get(right) == lSpiral.get(left))
+                    if (rSpiral.get(right).equals(lSpiral.get(left)))
                         return moveType.values()[(rSpiral.get(right) / 2)];
                     right = (right + 2) % 8;
                 }
@@ -328,5 +334,4 @@ public class GameLogic {
             }
         return moveType.EMPTY;
     }
-
 }
