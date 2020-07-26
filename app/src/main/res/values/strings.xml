@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">CustomViews</string>
+    <string name="one_player">One Player</string>
+    <string name="two_player">Two Player</string>
+    <string name="choose_mode">Choose Mode</string>
+    <string name="circulartictactoc">CircularTicTacToc</string>
 </resources>

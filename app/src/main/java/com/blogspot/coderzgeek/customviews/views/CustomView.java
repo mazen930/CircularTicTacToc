@@ -1,5 +1,6 @@
 package com.blogspot.coderzgeek.customviews.views;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
@@ -19,7 +20,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
+import com.blogspot.coderzgeek.customviews.CustomDialogClass;
 import com.blogspot.coderzgeek.customviews.GameLogic;
+import com.blogspot.coderzgeek.customviews.MainActivity;
 import com.blogspot.coderzgeek.customviews.R;
 
 import java.util.ArrayList;
@@ -268,8 +271,10 @@ public class CustomView extends View {
                     return true;
                 }
             } else {
+                CustomDialogClass cdd = new CustomDialogClass((Activity) getContext());
+                cdd.show();
                 Toast.makeText(getContext(), "This point is outside all circles", Toast.LENGTH_SHORT).show();
-                return false;
+                return true;
             }
         }
         return value;
@@ -345,6 +350,18 @@ public class CustomView extends View {
             return 2;
         } else
             return -1;
+
+    }
+
+    void handlingTouchEvent(int x, int y, int circleNumber, int levelFactor) {
+        taken[cellNumber(x, y) - 1][circleNumber] = true;
+        visited[cellNumber(x, y) - 1][circleNumber] = turns != 0;
+        gameLogic.humanMove(currentMove, mapping(cellNumber(x, y)) + levelFactor);
+        if (gameLogic.checkWinning().size() != 0) {
+            Toast.makeText(getContext(), "You won", Toast.LENGTH_SHORT).show();
+        }
+        currentMove = currentMove == GameLogic.moveType.X ? GameLogic.moveType.O : GameLogic.moveType.X;
+        turns = turns == 1 ? 0 : 1;
 
     }
 
