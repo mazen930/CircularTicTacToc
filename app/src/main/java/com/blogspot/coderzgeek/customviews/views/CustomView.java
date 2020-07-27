@@ -118,12 +118,19 @@ public class CustomView extends View {
 
         gameLogic = new GameLogic();//initialize
         this.mode = GameMode.twoPlayer;
-        //this.level
-        if (firstToPlay == 0)
+        if (firstToPlay == 0) { // Player Choose to play X
             currentMove = GameLogic.moveType.X;
-        else
-            currentMove = GameLogic.moveType.O;
-
+        } else {
+            currentMove = GameLogic.moveType.O; // PLayer Choose to play O
+            if (gameMode == 1) { // Computer PLays First
+                int targetCell = gameLogic.computerMove(currentMove, GameLogic.levelType.HARD);
+                Pair<Integer, Integer> cellAndLevel = deMapper(targetCell);
+                taken[cellAndLevel.second][cellAndLevel.first] = true;
+                visited[cellAndLevel.second][cellAndLevel.first] = currentMove.getNumber() != 1;
+                currentMove = currentMove == GameLogic.moveType.X ? GameLogic.moveType.O : GameLogic.moveType.X;
+                turns = turns == 1 ? 0 : 1;
+            }
+        }
 
         if (set == null)
             return;
@@ -333,15 +340,29 @@ public class CustomView extends View {
     }
 
     void handlingTouchEvent(float x, float y, int circleNumber, int levelFactor) {
-        taken[cellNumber(x, y) - 1][circleNumber] = true;
-        visited[cellNumber(x, y) - 1][circleNumber] = turns != 0;
-        if (gameMode == 1)// 2 player Mode
+        if (gameMode == 0) {// 2 player Mode
             gameLogic.humanMove(currentMove, mapping(cellNumber(x, y)) + levelFactor);
-        else if (gameMode == 0) {// 1 Player Mode
-            if ((firstToPlay == 0 && currentMove == GameLogic.moveType.O) || (firstToPlay == 1 && currentMove == GameLogic.moveType.X))
-                gameLogic.computerMove(currentMove, GameLogic.levelType.HARD);
-            else
-                gameLogic.humanMove(currentMove, mapping(cellNumber(x, y)) + levelFactor);
+            taken[cellNumber(x, y) - 1][circleNumber] = true;
+            visited[cellNumber(x, y) - 1][circleNumber] = currentMove.getNumber() != 1;
+        } else if (gameMode == 1) {// 1 Player Mode
+            // Human Plays First
+            gameLogic.humanMove(currentMove, mapping(cellNumber(x, y)) + levelFactor);
+            taken[cellNumber(x, y) - 1][circleNumber] = true;
+            visited[cellNumber(x, y) - 1][circleNumber] = currentMove.getNumber() != -1;//x
+            currentMove = currentMove == GameLogic.moveType.X ? GameLogic.moveType.O : GameLogic.moveType.X;
+            turns = turns == 1 ? 0 : 1;
+
+            // Check if is there any winner
+            if (gameLogic.checkWinning().size() != 0) {
+                CustomDialogClass cdd = new CustomDialogClass((Activity) getContext());
+                cdd.show();
+            }
+
+            // Computer Second
+            int targetCell = gameLogic.computerMove(currentMove, GameLogic.levelType.HARD);
+            Pair<Integer, Integer> cellAndLevel = deMapper(targetCell);
+            taken[cellAndLevel.second][cellAndLevel.first] = true;
+            visited[cellAndLevel.second][cellAndLevel.first] = currentMove.getNumber() != -1;
         }
         if (gameLogic.checkWinning().size() != 0) {
             CustomDialogClass cdd = new CustomDialogClass((Activity) getContext());
@@ -351,6 +372,19 @@ public class CustomView extends View {
         currentMove = currentMove == GameLogic.moveType.X ? GameLogic.moveType.O : GameLogic.moveType.X;
         turns = turns == 1 ? 0 : 1;
 
+    }
+
+    Pair<Integer, Integer> deMapper(int cellNumber) {
+        if (cellNumber >= 24)
+            return new Pair<>(3, cellNumber - 24);
+        else if (cellNumber >= 16)
+            return new Pair<>(2, cellNumber - 16);
+        else if (cellNumber >= 8)
+            return new Pair<>(1, cellNumber - 8);
+        else if (cellNumber >= 0)
+            return new Pair<>(0, cellNumber);
+        else
+            return new Pair<>(-1, -1);
     }
 
 }

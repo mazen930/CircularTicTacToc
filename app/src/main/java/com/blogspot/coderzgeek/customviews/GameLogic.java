@@ -222,12 +222,17 @@ public class GameLogic {
             } else if (sScore == mx)
                 optimalPlays.add(move);
         }
-        int randIdx = randomInRange(optimalPlays.size());
+        int randIdx = randomInRange(optimalPlays.size() - 1);
         return optimalPlays.get(randIdx);
     }
 
     int randomInRange(int max) {
-        return new Random().nextInt((max - 1) + 1) + 1;
+        try {
+            return new Random().nextInt((max - 1) + 1) + 1;
+        }catch (Exception e){
+            e.printStackTrace();
+            return 0;
+        }
     }
 
     private int randomMove() {
