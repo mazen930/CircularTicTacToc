@@ -90,10 +90,16 @@ public class CustomView extends View {
         mPaintCircle.setStrokeWidth(5);
         mPaintCircle.setColor(Color.BLACK);
 
+        // initialize to draw X
         filledCircleRed = new Paint(Paint.ANTI_ALIAS_FLAG);
+        filledCircleRed.setStyle(Paint.Style.STROKE);
+        filledCircleRed.setStrokeWidth(5);
         filledCircleRed.setColor(Color.RED);
 
+        // Initialize to draw O
         filledCircleGreen = new Paint(Paint.ANTI_ALIAS_FLAG);
+        filledCircleGreen.setStyle(Paint.Style.STROKE);
+        filledCircleGreen.setStrokeWidth(5);
         filledCircleGreen.setColor(Color.GREEN);
 
         cX = (float) (Resources.getSystem().getDisplayMetrics().widthPixels / 2.0);
@@ -162,7 +168,8 @@ public class CustomView extends View {
                     float x = cells.get(i).get(j).first;
                     float y = cells.get(i).get(j).second;
                     if (!visited[i][j])
-                        canvas.drawCircle(x, y, (float) (0.1 * r1), filledCircleRed);
+                        //canvas.drawCircle(x, y, (float) (0.1 * r1), filledCircleRed);
+                        drawCross(canvas, x, y, (float) (0.1 * r1));
                     else
                         canvas.drawCircle(x, y, (float) (0.1 * r1), filledCircleGreen);
                 }
@@ -344,30 +351,48 @@ public class CustomView extends View {
             gameLogic.humanMove(currentMove, mapping(cellNumber(x, y)) + levelFactor);
             taken[cellNumber(x, y) - 1][circleNumber] = true;
             visited[cellNumber(x, y) - 1][circleNumber] = currentMove.getNumber() != 1;
+            if (gameLogic.checkWinning().size() != 0) {
+                CustomDialogClass cdd;
+                if (currentMove.getNumber() == 1) {
+                    cdd = new CustomDialogClass((Activity) getContext(), "X Won");
+                } else
+                    cdd = new CustomDialogClass((Activity) getContext(), "O Won");
+                cdd.show();
+                //Toast.makeText(getContext(), "You won", Toast.LENGTH_SHORT).show();
+            }
         } else if (gameMode == 1) {// 1 Player Mode
             // Human Plays First
             gameLogic.humanMove(currentMove, mapping(cellNumber(x, y)) + levelFactor);
             taken[cellNumber(x, y) - 1][circleNumber] = true;
-            visited[cellNumber(x, y) - 1][circleNumber] = currentMove.getNumber() != -1;//x
+            visited[cellNumber(x, y) - 1][circleNumber] = currentMove.getNumber() != 1;//x
             currentMove = currentMove == GameLogic.moveType.X ? GameLogic.moveType.O : GameLogic.moveType.X;
             turns = turns == 1 ? 0 : 1;
 
             // Check if is there any winner
             if (gameLogic.checkWinning().size() != 0) {
-                CustomDialogClass cdd = new CustomDialogClass((Activity) getContext());
+                CustomDialogClass cdd;
+                if (currentMove.getNumber() == 1) {
+                    cdd = new CustomDialogClass((Activity) getContext(), "X Won");
+                } else
+                    cdd = new CustomDialogClass((Activity) getContext(), "O Won");
                 cdd.show();
+                //Toast.makeText(getContext(), "You won", Toast.LENGTH_SHORT).show();
             }
 
             // Computer Second
             int targetCell = gameLogic.computerMove(currentMove, GameLogic.levelType.HARD);
             Pair<Integer, Integer> cellAndLevel = deMapper(targetCell);
             taken[cellAndLevel.second][cellAndLevel.first] = true;
-            visited[cellAndLevel.second][cellAndLevel.first] = currentMove.getNumber() != -1;
-        }
-        if (gameLogic.checkWinning().size() != 0) {
-            CustomDialogClass cdd = new CustomDialogClass((Activity) getContext());
-            cdd.show();
-            //Toast.makeText(getContext(), "You won", Toast.LENGTH_SHORT).show();
+            visited[cellAndLevel.second][cellAndLevel.first] = currentMove.getNumber() != 1;
+            if (gameLogic.checkWinning().size() != 0) {
+                CustomDialogClass cdd;
+                if (currentMove.getNumber() == 1) { // X number is = 1
+                    cdd = new CustomDialogClass((Activity) getContext(), "X Won");
+                } else
+                    cdd = new CustomDialogClass((Activity) getContext(), "O Won");
+                cdd.show();
+                //Toast.makeText(getContext(), "You won", Toast.LENGTH_SHORT).show();
+            }
         }
         currentMove = currentMove == GameLogic.moveType.X ? GameLogic.moveType.O : GameLogic.moveType.X;
         turns = turns == 1 ? 0 : 1;
@@ -387,4 +412,9 @@ public class CustomView extends View {
             return new Pair<>(-1, -1);
     }
 
+    void drawCross(Canvas canvas, float cX, float cY, float length) {
+        float theta = (float) (1.0 / Math.sqrt(2));
+        canvas.drawLine(cX - length * theta, cY - length * theta, cX + length * theta, cY + length * theta, filledCircleRed);
+        canvas.drawLine(cX - length * theta, cY + length * theta, cX + length * theta, cY - length * theta, filledCircleRed);
+    }
 }

@@ -229,7 +229,7 @@ public class GameLogic {
     int randomInRange(int max) {
         try {
             return new Random().nextInt((max - 1) + 1) + 1;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return 0;
         }
