@@ -56,18 +56,21 @@ public class CustomView extends View {
     ArrayList<ArrayList<Pair<Float, Float>>> cells;
 
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public CustomView(Context context) {
         super(context);
 
         init(null, context);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public CustomView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         init(attrs, context);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public CustomView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
@@ -81,6 +84,7 @@ public class CustomView extends View {
         init(attrs, context);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void init(@Nullable AttributeSet set, Context context) {
         gameMode = StartGameActivity.gameMode;
         firstToPlay = ChooseWhoIsStarting.firstToPlay;
@@ -227,6 +231,7 @@ public class CustomView extends View {
     }
 
     //This method to handle touch events to move canvas object
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         boolean value = super.onTouchEvent(event);
@@ -346,6 +351,34 @@ public class CustomView extends View {
 
     }
 
+    int deMapping(int cellNumber) {
+        if (cellNumber == 0)
+            return 1;
+        else if (cellNumber == 1) {
+            return 0;
+
+        } else if (cellNumber == 2) {
+            return 7;
+
+        } else if (cellNumber == 3) {
+            return 6;
+
+        } else if (cellNumber == 4) {
+            return 5;
+
+        } else if (cellNumber == 5) {
+            return 6;
+
+        } else if (cellNumber == 6) {
+            return 7;
+
+        } else if (cellNumber == 7) {
+            return 2;
+        } else
+            return -1;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     void handlingTouchEvent(float x, float y, int circleNumber, int levelFactor) {
         if (gameMode == 0) {// 2 player Mode
             gameLogic.humanMove(currentMove, mapping(cellNumber(x, y)) + levelFactor);
@@ -358,16 +391,12 @@ public class CustomView extends View {
                 } else
                     cdd = new CustomDialogClass((Activity) getContext(), "O Won");
                 cdd.show();
-                //Toast.makeText(getContext(), "You won", Toast.LENGTH_SHORT).show();
             }
         } else if (gameMode == 1) {// 1 Player Mode
             // Human Plays First
             gameLogic.humanMove(currentMove, mapping(cellNumber(x, y)) + levelFactor);
             taken[cellNumber(x, y) - 1][circleNumber] = true;
             visited[cellNumber(x, y) - 1][circleNumber] = currentMove.getNumber() != 1;//x
-            currentMove = currentMove == GameLogic.moveType.X ? GameLogic.moveType.O : GameLogic.moveType.X;
-            turns = turns == 1 ? 0 : 1;
-
             // Check if is there any winner
             if (gameLogic.checkWinning().size() != 0) {
                 CustomDialogClass cdd;
@@ -376,8 +405,9 @@ public class CustomView extends View {
                 } else
                     cdd = new CustomDialogClass((Activity) getContext(), "O Won");
                 cdd.show();
-                //Toast.makeText(getContext(), "You won", Toast.LENGTH_SHORT).show();
             }
+            currentMove = currentMove == GameLogic.moveType.X ? GameLogic.moveType.O : GameLogic.moveType.X;
+            turns = turns == 1 ? 0 : 1;
 
             // Computer Second
             int targetCell = gameLogic.computerMove(currentMove, GameLogic.levelType.HARD);
@@ -391,7 +421,6 @@ public class CustomView extends View {
                 } else
                     cdd = new CustomDialogClass((Activity) getContext(), "O Won");
                 cdd.show();
-                //Toast.makeText(getContext(), "You won", Toast.LENGTH_SHORT).show();
             }
         }
         currentMove = currentMove == GameLogic.moveType.X ? GameLogic.moveType.O : GameLogic.moveType.X;
@@ -401,13 +430,13 @@ public class CustomView extends View {
 
     Pair<Integer, Integer> deMapper(int cellNumber) {
         if (cellNumber >= 24)
-            return new Pair<>(3, cellNumber - 24);
+            return new Pair<>(3, deMapping(cellNumber - 24));
         else if (cellNumber >= 16)
-            return new Pair<>(2, cellNumber - 16);
+            return new Pair<>(2, deMapping(cellNumber - 16));
         else if (cellNumber >= 8)
-            return new Pair<>(1, cellNumber - 8);
+            return new Pair<>(1, deMapping(cellNumber - 8));
         else if (cellNumber >= 0)
-            return new Pair<>(0, cellNumber);
+            return new Pair<>(0, deMapping(cellNumber));
         else
             return new Pair<>(-1, -1);
     }

@@ -1,7 +1,11 @@
 package com.blogspot.coderzgeek.customviews;
 
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class GameLogic {
     public enum moveType {
@@ -180,6 +184,7 @@ public class GameLogic {
         return bestCell;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private int mediumMove(moveType type) {
         ArrayList<Integer> optimalPlays = new ArrayList<>();
         int mx = (int) -1e9;  //maximum score
@@ -222,19 +227,24 @@ public class GameLogic {
             } else if (sScore == mx)
                 optimalPlays.add(move);
         }
-        int randIdx = randomInRange(optimalPlays.size() - 1);
-        return optimalPlays.get(randIdx);
+        int randIdx = randomInRange(optimalPlays.size());
+        if (randIdx < optimalPlays.size() - 1)
+            return optimalPlays.get(randIdx);
+        else
+            return optimalPlays.get(0);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     int randomInRange(int max) {
         try {
-            return new Random().nextInt((max - 1) + 1) + 1;
+            return ThreadLocalRandom.current().nextInt(0, max + 1);
         } catch (Exception e) {
             e.printStackTrace();
             return 0;
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private int randomMove() {
         ArrayList<Integer> moves = new ArrayList<>();
         for (int cell = 0; cell < 32; cell++) {
@@ -245,6 +255,7 @@ public class GameLogic {
         return moves.get(randIdx);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public int computerMove(moveType type, levelType level) {
         int cnt = 0;
         for (int i = 0; i < 32; i++) {
