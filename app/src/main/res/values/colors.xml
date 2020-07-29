@@ -3,6 +3,8 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-
     <color name="squareColor">#3F51B5</color>
+    <color name="NightBlue">#212845</color>
+    <color name="White">#ffff</color>
+    <color name="Yellow">#f8d420</color>
 </resources>

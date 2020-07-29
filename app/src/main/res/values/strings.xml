@@ -1,12 +1,14 @@
 <resources>
     <string name="app_name">CustomViews</string>
-    <string name="one_player">One Player</string>
-    <string name="two_player">Two Player</string>
+    <string name="one_player">Play with computer</string>
+    <string name="two_player">Play with a friend</string>
     <string name="choose_mode">Choose Mode</string>
-    <string name="circulartictactoc">CircularTicTacToc</string>
+    <string name="circulartictactoc">Circular Tic Tac Toc</string>
     <string name="play_as_o">Play as O</string>
     <string name="plays_as_x">Plays As X</string>
     <string name="play_again">Play Again</string>
     <string name="main_menu">Main Menu</string>
     <string name="you_won">You won</string>
+    <string name="x_image">X image</string>
+    <string name="oimage">OImage</string>
 </resources>

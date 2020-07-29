@@ -131,7 +131,7 @@ public class CustomView extends View {
         if (firstToPlay == 0) { // Player Choose to play X
             currentMove = GameLogic.moveType.X;
         } else {
-            currentMove = GameLogic.moveType.O; // PLayer Choose to play O
+            currentMove = GameLogic.moveType.X; // PLayer Choose to play O
             if (gameMode == 1) { // Computer PLays First
                 int targetCell = gameLogic.computerMove(currentMove, GameLogic.levelType.HARD);
                 Pair<Integer, Integer> cellAndLevel = deMapper(targetCell);

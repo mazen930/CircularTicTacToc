@@ -1,58 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:background="@color/NightBlue"
     tools:context=".StartGameActivity">
 
-    <android.support.v4.widget.Space
-        android:layout_width="match_parent"
-        android:layout_height="20dp"/>
+    <ImageView
+        android:id="@+id/XImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/x_image"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.009"
+        android:src="@drawable/x_image" />
 
     <TextView
         android:id="@+id/gameTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:fontFamily="sans-serif-condensed-medium"
-        android:textSize="50sp"
         android:text="@string/circulartictactoc"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-    <android.support.v4.widget.Space
-        android:layout_width="match_parent"
-        android:layout_height="100dp"/>
-
-    <TextView
-        android:id="@+id/title"
-        android:layout_gravity="center"
-        android:text="@string/choose_mode"
+        android:textColor="@color/White"
         android:textSize="40sp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.604"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.268" />
 
-    <android.support.v4.widget.Space
-        android:layout_width="match_parent"
-        android:layout_height="20dp"/>
 
     <Button
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
         android:id="@+id/OnePlayerButton"
-        android:text="@string/one_player"
-        android:textSize="30sp"
-        android:layout_gravity="center"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
-    <android.support.v4.widget.Space
-        android:layout_width="match_parent"
-        android:layout_height="20dp"/>
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/one_player"
+        android:textSize="25sp"
+        android:background="@color/Yellow"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/gameTitle"
+        app:layout_constraintVertical_bias="0.167" />
 
     <Button
         android:id="@+id/TwoPlayerButton"
-        android:text="@string/two_player"
-        android:layout_gravity="center"
-        android:textSize="30sp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/two_player"
+        android:textStyle="bold"
+        android:textSize="25sp"
+        android:background="@color/Yellow"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/gameTitle"
+        app:layout_constraintVertical_bias="0.398" />
 
-</LinearLayout>
+    <ImageView
+        android:id="@+id/OImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        android:src="@drawable/o_image"
+        android:contentDescription="@string/oimage" />
+</android.support.constraint.ConstraintLayout>
