@@ -367,10 +367,10 @@ public class CustomView extends View {
             return 5;
 
         } else if (cellNumber == 5) {
-            return 6;
+            return 4;
 
         } else if (cellNumber == 6) {
-            return 7;
+            return 3;
 
         } else if (cellNumber == 7) {
             return 2;

@@ -307,7 +307,7 @@ public class GameLogic {
                 int right = left;
                 for (int i = 0; i < 4; i++) {
                     if (rSpiral.get(right).equals(lSpiral.get(left)))
-                        return moveType.values()[(rSpiral.get(right) / 2)];
+                        return moveType.values()[(rSpiral.get(right) / 2)];////error here
                     right = (right + 2) % 8;
                 }
             }
