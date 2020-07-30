@@ -92,19 +92,19 @@ public class CustomView extends View {
         mPaintCircle = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaintCircle.setStyle(Paint.Style.STROKE);
         mPaintCircle.setStrokeWidth(5);
-        mPaintCircle.setColor(Color.BLACK);
+        mPaintCircle.setColor(Color.BLUE);
 
         // initialize to draw X
         filledCircleRed = new Paint(Paint.ANTI_ALIAS_FLAG);
         filledCircleRed.setStyle(Paint.Style.STROKE);
-        filledCircleRed.setStrokeWidth(5);
-        filledCircleRed.setColor(Color.RED);
+        filledCircleRed.setStrokeWidth(10);
+        filledCircleRed.setColor(Color.WHITE);
 
         // Initialize to draw O
         filledCircleGreen = new Paint(Paint.ANTI_ALIAS_FLAG);
         filledCircleGreen.setStyle(Paint.Style.STROKE);
-        filledCircleGreen.setStrokeWidth(5);
-        filledCircleGreen.setColor(Color.GREEN);
+        filledCircleGreen.setStrokeWidth(10);
+        filledCircleGreen.setColor(Color.WHITE);
 
         cX = (float) (Resources.getSystem().getDisplayMetrics().widthPixels / 2.0);
         cY = (float) (Resources.getSystem().getDisplayMetrics().heightPixels / 2.0);
@@ -445,5 +445,9 @@ public class CustomView extends View {
         float theta = (float) (1.0 / Math.sqrt(2));
         canvas.drawLine(cX - length * theta, cY - length * theta, cX + length * theta, cY + length * theta, filledCircleRed);
         canvas.drawLine(cX - length * theta, cY + length * theta, cX + length * theta, cY - length * theta, filledCircleRed);
+    }
+
+    void showWinPath(ArrayList<Integer> winPath) {
+
     }
 }
