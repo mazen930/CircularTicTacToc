@@ -51,6 +51,7 @@ public class CustomDialogClass extends Dialog implements
                 c.startActivity(i);
                 break;
             default:
+
                 break;
         }
     }

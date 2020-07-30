@@ -31,7 +31,7 @@ import java.util.ArrayList;
 
 public class CustomView extends View {
 
-    private Paint mPaintCircle, filledCircleRed, filledCircleGreen;
+    private Paint mPaintCircle, filledCircleRed, filledCircleGreen, whitePaintSign;
     private float cX;
     private float cY;
     private float r1, r2, r3, r4;
@@ -39,6 +39,8 @@ public class CustomView extends View {
     private Drawable drawableRight, drawableFalse;
     private Bitmap bitmapRight, bitmapFalse, temp;
     boolean taken[][], visited[][];
+    boolean winFlag = false;
+    ArrayList<Integer> winPath;
     int turns;
     GameLogic gameLogic;
     int gameMode;
@@ -94,17 +96,23 @@ public class CustomView extends View {
         mPaintCircle.setStrokeWidth(5);
         mPaintCircle.setColor(Color.BLUE);
 
+        //initialize normal case sign
+        whitePaintSign = new Paint(Paint.ANTI_ALIAS_FLAG);
+        whitePaintSign.setStyle(Paint.Style.STROKE);
+        whitePaintSign.setStrokeWidth(10);
+        whitePaintSign.setColor(Color.WHITE);
+
         // initialize to draw X
         filledCircleRed = new Paint(Paint.ANTI_ALIAS_FLAG);
         filledCircleRed.setStyle(Paint.Style.STROKE);
         filledCircleRed.setStrokeWidth(10);
-        filledCircleRed.setColor(Color.WHITE);
+        filledCircleRed.setColor(Color.RED);
 
         // Initialize to draw O
         filledCircleGreen = new Paint(Paint.ANTI_ALIAS_FLAG);
         filledCircleGreen.setStyle(Paint.Style.STROKE);
         filledCircleGreen.setStrokeWidth(10);
-        filledCircleGreen.setColor(Color.WHITE);
+        filledCircleGreen.setColor(Color.GREEN);
 
         cX = (float) (Resources.getSystem().getDisplayMetrics().widthPixels / 2.0);
         cY = (float) (Resources.getSystem().getDisplayMetrics().heightPixels / 2.0);
@@ -172,18 +180,24 @@ public class CustomView extends View {
                     float x = cells.get(i).get(j).first;
                     float y = cells.get(i).get(j).second;
                     if (!visited[i][j])
-                        //canvas.drawCircle(x, y, (float) (0.1 * r1), filledCircleRed);
-                        drawCross(canvas, x, y, (float) (0.1 * r1));
+                        drawCross(canvas, x, y, (float) (0.1 * r1), whitePaintSign);
                     else
-                        canvas.drawCircle(x, y, (float) (0.1 * r1), filledCircleGreen);
+                        canvas.drawCircle(x, y, (float) (0.1 * r1), whitePaintSign);
                 }
             }
         }
-        /**
-         * You can also draw a full path given a set of points so that canvas can draw it
-         **/
-
-
+        //Draw Win Path
+        if (winFlag) {
+            for (int i = 0; i < winPath.size(); i++) {
+                Pair<Integer, Integer> cellAndLevel = deMapper(winPath.get(i));
+                float x = cells.get(cellAndLevel.second).get(cellAndLevel.first).first;
+                float y = cells.get(cellAndLevel.second).get(cellAndLevel.first).second;
+                if (!visited[cellAndLevel.second][cellAndLevel.first])
+                    drawCross(canvas, x, y, (float) (0.1 * r1), filledCircleRed); // X wins
+                else
+                    canvas.drawCircle(x, y, (float) (0.1 * r1), filledCircleGreen); // O Wins
+            }
+        }
     }
 
     boolean insideCircle(float x, float y, float radius) {
@@ -238,6 +252,10 @@ public class CustomView extends View {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             float x = event.getX();
             float y = event.getY();
+            if (winFlag) {
+                showEndGameDialogBox();
+                return true;
+            }
             if (insideCircle(x, y, r1)) {
                 //Inside Circle with r1
                 if (!taken[cellNumber(x, y) - 1][0]) {
@@ -385,12 +403,9 @@ public class CustomView extends View {
             taken[cellNumber(x, y) - 1][circleNumber] = true;
             visited[cellNumber(x, y) - 1][circleNumber] = currentMove.getNumber() != 1;
             if (gameLogic.checkWinning().size() != 0) {
-                CustomDialogClass cdd;
-                if (currentMove.getNumber() == 1) {
-                    cdd = new CustomDialogClass((Activity) getContext(), "X Won");
-                } else
-                    cdd = new CustomDialogClass((Activity) getContext(), "O Won");
-                cdd.show();
+                winFlag = true;
+                winPath = gameLogic.checkWinning();
+                Toast.makeText(getContext(), "Touch any where to continue", Toast.LENGTH_LONG).show();
             }
         } else if (gameMode == 1) {// 1 Player Mode
             // Human Plays First
@@ -400,11 +415,9 @@ public class CustomView extends View {
             // Check if is there any winner
             if (gameLogic.checkWinning().size() != 0) {
                 CustomDialogClass cdd;
-                if (currentMove.getNumber() == 1) {
-                    cdd = new CustomDialogClass((Activity) getContext(), "X Won");
-                } else
-                    cdd = new CustomDialogClass((Activity) getContext(), "O Won");
-                cdd.show();
+                winFlag = true;
+                winPath = gameLogic.checkWinning();
+                Toast.makeText(getContext(), "Touch any where to continue", Toast.LENGTH_LONG).show();
             }
             currentMove = currentMove == GameLogic.moveType.X ? GameLogic.moveType.O : GameLogic.moveType.X;
             turns = turns == 1 ? 0 : 1;
@@ -415,12 +428,9 @@ public class CustomView extends View {
             taken[cellAndLevel.second][cellAndLevel.first] = true;
             visited[cellAndLevel.second][cellAndLevel.first] = currentMove.getNumber() != 1;
             if (gameLogic.checkWinning().size() != 0) {
-                CustomDialogClass cdd;
-                if (currentMove.getNumber() == 1) { // X number is = 1
-                    cdd = new CustomDialogClass((Activity) getContext(), "X Won");
-                } else
-                    cdd = new CustomDialogClass((Activity) getContext(), "O Won");
-                cdd.show();
+                winFlag = true;
+                winPath = gameLogic.checkWinning();
+                Toast.makeText(getContext(), "Touch any where to continue", Toast.LENGTH_LONG).show();
             }
         }
         currentMove = currentMove == GameLogic.moveType.X ? GameLogic.moveType.O : GameLogic.moveType.X;
@@ -441,13 +451,20 @@ public class CustomView extends View {
             return new Pair<>(-1, -1);
     }
 
-    void drawCross(Canvas canvas, float cX, float cY, float length) {
+    void drawCross(Canvas canvas, float cX, float cY, float length, Paint color) {
         float theta = (float) (1.0 / Math.sqrt(2));
-        canvas.drawLine(cX - length * theta, cY - length * theta, cX + length * theta, cY + length * theta, filledCircleRed);
-        canvas.drawLine(cX - length * theta, cY + length * theta, cX + length * theta, cY - length * theta, filledCircleRed);
+        canvas.drawLine(cX - length * theta, cY - length * theta, cX + length * theta, cY + length * theta, color);
+        canvas.drawLine(cX - length * theta, cY + length * theta, cX + length * theta, cY - length * theta, color);
     }
 
-    void showWinPath(ArrayList<Integer> winPath) {
-
+    void showEndGameDialogBox() {
+        CustomDialogClass cdd;
+        if (currentMove.getNumber() == 1) {
+            cdd = new CustomDialogClass((Activity) getContext(), "X Won");
+        } else
+            cdd = new CustomDialogClass((Activity) getContext(), "O Won");
+        cdd.setCancelable(false);
+        cdd.setCanceledOnTouchOutside(false);
+        cdd.show();
     }
 }
