@@ -2,6 +2,7 @@ package com.blogspot.coderzgeek.customviews;
 
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -306,13 +307,32 @@ public class GameLogic {
             if (Math.abs(lSpiral.get(left)) == 2) {
                 int right = left;
                 for (int i = 0; i < 4; i++) {
-                    if (rSpiral.get(right).equals(lSpiral.get(left)))
-                        return moveType.values()[(rSpiral.get(right) / 2)];////error here
+                    if (rSpiral.get(right).equals(lSpiral.get(left))) {
+                        moveType temp = null;
+                        try {
+                            temp = moveType.values()[enumMapping(rSpiral.get(right) / 2)];
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            return moveType.EMPTY;
+                        }
+                        return temp; ////error here
+                    }
                     right = (right + 2) % 8;
                 }
             }
         }
         return moveType.EMPTY;
+    }
+
+    int enumMapping(int number) {
+        if (number == 0)
+            return moveType.EMPTY.getNumber();
+        else if (number == -1)
+            return moveType.O.getNumber();
+        else if (number == 1)
+            return moveType.X.getNumber();
+        else
+            return -10;//This means error takes place
     }
 
     private moveType checkOtherTraps(int move, int[] gameMatrix) {

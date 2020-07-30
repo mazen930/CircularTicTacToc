@@ -459,7 +459,7 @@ public class CustomView extends View {
 
     void showEndGameDialogBox() {
         CustomDialogClass cdd;
-        if (currentMove.getNumber() == 1) {
+        if (currentMove.getNumber() == -1) {
             cdd = new CustomDialogClass((Activity) getContext(), "X Won");
         } else
             cdd = new CustomDialogClass((Activity) getContext(), "O Won");
