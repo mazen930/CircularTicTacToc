@@ -12,7 +12,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 
 public class StartGameActivity extends AppCompatActivity {
-    Button onePlayerButton, twoPlayerButton;
+    Button onePlayerButton, twoPlayerButton, helpButton;
     public static int gameMode;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -33,6 +33,8 @@ public class StartGameActivity extends AppCompatActivity {
 
         onePlayerButton = (Button) findViewById(R.id.OnePlayerButton);
         twoPlayerButton = (Button) findViewById(R.id.TwoPlayerButton);
+        helpButton = (Button) findViewById(R.id.help_button);
+
         onePlayerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -49,6 +51,13 @@ public class StartGameActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+        helpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(), HowToPlay.class));
+            }
+        });
+
     }
 
 }

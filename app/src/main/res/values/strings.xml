@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CustomViews</string>
+    <string name="app_name">Circular Tic Tac Toe</string>
     <string name="one_player">Play with computer</string>
     <string name="two_player">Play with a friend</string>
     <string name="choose_mode">Choose Mode</string>
@@ -11,4 +11,7 @@
     <string name="you_won">You won</string>
     <string name="x_image">X image</string>
     <string name="oimage">OImage</string>
+    <string name="help_button">Help button</string>
+    <string name="how_to_play">How to play ?</string>
+    <string name="winning_cases">Winning Cases</string>
 </resources>
