@@ -443,6 +443,7 @@ public class CustomView extends View {
                 winPath = gameLogic.checkWinning();
                 lastMove = currentMove;
                 Toast.makeText(getContext(), "Touch any where to continue", Toast.LENGTH_LONG).show();
+                return;
             }
         } else if (gameMode == 1) {// 1 Player Mode
             // Human Plays First
@@ -457,6 +458,7 @@ public class CustomView extends View {
                 winPath = gameLogic.checkWinning();
                 lastMove = currentMove;
                 Toast.makeText(getContext(), "Touch any where to continue", Toast.LENGTH_LONG).show();
+                return;
             }
             currentMove = currentMove == GameLogic.moveType.X ? GameLogic.moveType.O : GameLogic.moveType.X;
             turns = turns == 1 ? 0 : 1;
@@ -472,6 +474,7 @@ public class CustomView extends View {
                 winPath = gameLogic.checkWinning();
                 lastMove = currentMove;
                 Toast.makeText(getContext(), "Touch any where to continue", Toast.LENGTH_LONG).show();
+                return;
             }
         }
         currentMove = currentMove == GameLogic.moveType.X ? GameLogic.moveType.O : GameLogic.moveType.X;

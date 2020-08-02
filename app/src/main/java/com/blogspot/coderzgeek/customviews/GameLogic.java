@@ -128,7 +128,7 @@ public class GameLogic {
                 boolean exit = false;
                 visited[cell] = player;
                 if (!isMax)
-                    visited[cell] = moveType.values()[opp];
+                    visited[cell] = moveType.values()[enumMapping(opp)];////////
                 for (int i = 0; i < 56; i++) {
                     if (isMax)
                         gameMatrix[i] += (int) player.getNumber() * a[cell][i];
