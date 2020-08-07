@@ -124,6 +124,7 @@ public class CustomView extends View {
         r3 = (float) (basicRadius * 0.75);
         r4 = basicRadius;
 
+        //this 5 lines of code for next features
         temp = BitmapFactory.decodeResource(getResources(), R.drawable.false_20);
 
         drawableRight = context.getResources().getDrawable(R.drawable.right_8);
@@ -189,7 +190,7 @@ public class CustomView extends View {
                         else if (j == 2)
                             drawCross(canvas, x, y, (float) (0.3 * r1), whitePaintSign);
                         else
-                            drawCross(canvas, x, y, (float) (0.4 * r1), whitePaintSign);
+                            drawCross(canvas, x, y, (float) (0.35 * r1), whitePaintSign);
                     } else {
                         if (j == 0)
                             canvas.drawCircle(x, y, (float) (0.1 * r1), whitePaintSign);
@@ -198,7 +199,7 @@ public class CustomView extends View {
                         else if (j == 2)
                             canvas.drawCircle(x, y, (float) (0.3 * r1), whitePaintSign);
                         else
-                            canvas.drawCircle(x, y, (float) (0.4 * r1), whitePaintSign);
+                            canvas.drawCircle(x, y, (float) (0.35 * r1), whitePaintSign);
                     }
                 }
             }
@@ -217,7 +218,7 @@ public class CustomView extends View {
                     else if (cellAndLevel.first == 2)
                         drawCross(canvas, x, y, (float) (0.3 * r1), filledCircleRed);
                     else
-                        drawCross(canvas, x, y, (float) (0.4 * r1), filledCircleRed);
+                        drawCross(canvas, x, y, (float) (0.35 * r1), filledCircleRed);
                 } // X wins
                 else {
                     if (cellAndLevel.first == 0)
@@ -227,7 +228,7 @@ public class CustomView extends View {
                     else if (cellAndLevel.first == 2)
                         canvas.drawCircle(x, y, (float) (0.3 * r1), filledCircleGreen);
                     else
-                        canvas.drawCircle(x, y, (float) (0.4 * r1), filledCircleGreen);
+                        canvas.drawCircle(x, y, (float) (0.35 * r1), filledCircleGreen);
                 } // O Wins
             }
         }

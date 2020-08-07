@@ -2,10 +2,8 @@ package com.blogspot.coderzgeek.customviews;
 
 import android.os.Build;
 import android.support.annotation.RequiresApi;
-import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class GameLogic {
@@ -128,7 +126,7 @@ public class GameLogic {
                 boolean exit = false;
                 visited[cell] = player;
                 if (!isMax)
-                    visited[cell] = moveType.values()[enumMapping(opp)];////////
+                    visited[cell] = enumMapping(opp);
                 for (int i = 0; i < 56; i++) {
                     if (isMax)
                         gameMatrix[i] += (int) player.getNumber() * a[cell][i];
@@ -310,7 +308,7 @@ public class GameLogic {
                     if (rSpiral.get(right).equals(lSpiral.get(left))) {
                         moveType temp = null;
                         try {
-                            temp = moveType.values()[enumMapping(rSpiral.get(right) / 2)];
+                            temp = enumMapping(rSpiral.get(right) / 2);
                         } catch (Exception e) {
                             e.printStackTrace();
                             return moveType.EMPTY;
@@ -324,15 +322,15 @@ public class GameLogic {
         return moveType.EMPTY;
     }
 
-    int enumMapping(int number) {
+    moveType enumMapping(int number) {
         if (number == 0)
-            return moveType.EMPTY.getNumber();
+            return moveType.EMPTY;
         else if (number == -1)
-            return moveType.O.getNumber();
+            return moveType.O;
         else if (number == 1)
-            return moveType.X.getNumber();
+            return moveType.X;
         else
-            return -10;//This means error takes place
+            return moveType.EMPTY;//This means error takes place
     }
 
     private moveType checkOtherTraps(int move, int[] gameMatrix) {
